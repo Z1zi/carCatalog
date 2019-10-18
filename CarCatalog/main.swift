@@ -1,6 +1,6 @@
 //  main.swift
 //  CarCatalog
-//  Created by Fedor Zverev on 14.10.2019.
+//  Created by Fedor Zverev on 14.10.2019.
 //  Copyright © 2019 Fedor Zverev. All rights reserved.
 
 import Foundation
@@ -33,17 +33,16 @@ var carArray: [[String]] = carCatalog
                 return $0
             })
     })
-print("Загружено \(carArray.count-1) автомобилей")
+print("Загружено строк с данными: \(carArray.count-1)")
 
 func saveArrayToFile (arrayToSave : [[String]]){
     var tempString = ""
+    var tempArray : [String] = []
     arrayToSave.forEach {(temp) in
-        temp.forEach{ (temp) in
-            tempString += temp
-            tempString += ","
-        }
-        tempString += "\n"
+        tempString = temp.joined(separator: ",")
+        tempArray.append(tempString)
     }
+    tempString = tempArray.joined(separator: "\n")
     let file = "auto.txt"
     if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
         let fileURL = dir.appendingPathComponent(file)
@@ -53,9 +52,8 @@ func saveArrayToFile (arrayToSave : [[String]]){
         catch { print("Ошибка открытия файла!")}
     }
 }
-
 func deleteItem (_ : [[String]])->([[String]]){
-    print("Введите индекс удаляемого автомобиля: 0 - \(carArray.count - 2)")
+    print("Введите индекс удаляемого автомобиля: 0 - \(carArray.count - 1)")
     let tempIndex = readLine()
     carArray.remove(at: Int(tempIndex!)!-1)
     saveArrayToFile(arrayToSave: carArray)
@@ -68,7 +66,7 @@ func quit (_ : [[String]])->([[String]]){
     return carArray
 }
 func viewItem(){
-    print("Введите индекс просматриваемого авто: 0 - \(carArray.count - 2)")
+    print("Введите индекс просматриваемого авто: 0 - \(carArray.count - 1)")
     let indexStr = readLine()!
     let index = Int(indexStr)
     print("Индекс: \(indexStr)\nГод выпуска: \(carArray[index!][0])\nПроизводитель: \(carArray[index!][1])\nМодель: \(carArray[index!][2])\nТипа кузова: \(carArray[index!][3])")
