@@ -22,7 +22,7 @@ func loadDataFromFile ()->(String){
 }
 
 var carCatalog : String = loadDataFromFile()
-if carCatalog.isEmpty { carCatalog = "2009,Honda,Civic,Sedan\n2008,Kia,Ceed,Hatchback\n2018,BMW,Z4,Coupe\n"
+if carCatalog.isEmpty { carCatalog = "2009,Honda,Civic,Sedan\n2008,Kia,Ceed,Hatchback\n2018,BMW,Z4,Coupe"
     print ("Сохраненные данные не найдены! Загружен стартовый набор данных.")
 }
 var carArray: [[String]] = carCatalog
@@ -33,7 +33,7 @@ var carArray: [[String]] = carCatalog
                 return $0
             })
     })
-print("Загружено строк с данными: \(carArray.count-1)")
+print("Загружено строк с данными: \(carArray.count)")
 
 func saveArrayToFile (arrayToSave : [[String]]){
     var tempString = ""
@@ -55,7 +55,7 @@ func saveArrayToFile (arrayToSave : [[String]]){
 func deleteItem (_ : [[String]])->([[String]]){
     print("Введите индекс удаляемого автомобиля: 0 - \(carArray.count - 1)")
     let tempIndex = readLine()
-    carArray.remove(at: Int(tempIndex!)!-1)
+    carArray.remove(at: Int(tempIndex!)!)
     saveArrayToFile(arrayToSave: carArray)
     print("Удалена запись с индексом \(String(describing: tempIndex))\nДанные записаны")
     return carArray
@@ -86,16 +86,16 @@ func appendItem(_ : [[String]])->([[String]]){
     return carArray
 }
 
-func editItem(_: [[String]])->[[String]]{
-    print("Введите индекс редактируемого автомобиля: 0 - \(carArray.count - 2)")
+func editItem(_ : [[String]])->[[String]]{
+    print("Введите индекс редактируемого автомобиля: 0 - \(carArray.count - 1)")
     let tmpIndex = Int(readLine()!)
-    print("Введите год выпуска:")
+    print("Введите год выпуска: [\(carArray[tmpIndex!][0])]")
     carArray[tmpIndex!][0] = readLine()!
-    print("Введите производителя:")
+    print("Введите производителя: [\(carArray[tmpIndex!][1])]")
     carArray[tmpIndex!][1] = readLine()!
-    print("Введите марку:")
+    print("Введите марку: [\(carArray[tmpIndex!][2])]")
     carArray[tmpIndex!][2] = readLine()!
-    print("Введите тип кузова:")
+    print("Введите тип кузова: [\(carArray[tmpIndex!][3])]")
     carArray[tmpIndex!][3] = readLine()!
     saveArrayToFile(arrayToSave: carArray)
     return carArray
@@ -103,16 +103,16 @@ func editItem(_: [[String]])->[[String]]{
 
 //функция главного меню
 func MainMenu() {
-    
+  //  dump(carArray)
     print("Выберите операцию \n1 : Просмотр\n2 : Редактирование\n3 : Удаление\n4 : Добавить индекс\n5 : Выход")
     while !isQuit{
         let operation = readLine()
         switch operation {
-        case "5": carArray = quit(carArray)
-        case "3": carArray = deleteItem(carArray)
-        case "2": carArray = editItem(carArray)
         case "1": viewItem()
+        case "2": carArray = editItem(carArray)
+        case "3": carArray = deleteItem(carArray)
         case "4": carArray = appendItem(carArray)
+        case "5": carArray = quit(carArray)
         case .none: MainMenu()
         case .some(_): MainMenu()
         }
