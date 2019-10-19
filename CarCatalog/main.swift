@@ -6,7 +6,7 @@
 import Foundation
 
 var isQuit:Bool = false
-
+var tmpCar : [String] = []
 func loadDataFromFile ()->(String){
     var content:String = ""
     let file = "auto.txt"
@@ -54,10 +54,17 @@ func saveArrayToFile (arrayToSave : [[String]]){
 }
 func deleteItem (_ : [[String]])->([[String]]){
     print("Введите индекс удаляемого автомобиля: 0 - \(carArray.count - 1)")
-    let tempIndex = readLine()
-    carArray.remove(at: Int(tempIndex!)!)
-    saveArrayToFile(arrayToSave: carArray)
-    print("Удалена запись с индексом \(String(describing: tempIndex))\nДанные записаны")
+    if let tempIndexStr = readLine() {
+        if let tempIndexInt = Int(tempIndexStr){
+            carArray.remove(at: Int(tempIndexInt))
+            saveArrayToFile(arrayToSave: carArray)
+            print("Удалена запись с индексом \(String(describing: tempIndexInt))\nДанные записаны")
+        }else{
+            print("Несуществующий индекс! Введите число от 0 до \(carArray.count - 1)")
+        }
+    }else{
+        print("Несуществующий индекс! Введите число от 0 до \(carArray.count - 1)")
+    }
     return carArray
 }
 func quit (_ : [[String]])->([[String]]){
@@ -73,37 +80,69 @@ func viewItem(){
 }
 func appendItem(_ : [[String]])->([[String]]){
     print("Введите год выпуска автомобиля:")
-    let tmpStr0 = readLine()
-    print("Введите производителя автомобиля:")
-    let tmpStr1 = readLine()
-    print("Введите модель автомобиля:")
-    let tmpStr2 = readLine()
-    print("Введите тип кузова автомобиля:")
-    let tmpStr3 = readLine()
-    carArray.remove(at: carArray.count-1)
-    carArray.append([tmpStr0!,tmpStr1!,tmpStr2!,tmpStr3!])
-    saveArrayToFile(arrayToSave: carArray)
+    if let tmpStr = readLine(){
+        if (Int(tmpStr) != nil)&&(Int(tmpStr)! > 1768){
+            tmpCar.append(tmpStr)
+            print("Введите производителя автомобиля:")
+            if let tmpStr = readLine(){
+                if tmpStr != "" {tmpCar.append(tmpStr)}
+                print("Введите модель автомобиля:")
+                if let tmpStr = readLine(){
+                    if tmpStr != "" {tmpCar.append(tmpStr)}
+                    print("Введите тип кузова автомобиля:")
+                    if let tmpStr = readLine(){
+                        if tmpStr != "" {
+                            tmpCar.append(tmpStr)
+                            carArray.append(tmpCar)
+                            saveArrayToFile(arrayToSave: carArray)
+                        }
+                    }else{print("Введите тип кузова")}
+                }else{print("Введите модель")}
+            }else{print("Введите производителя")}
+        }else{print("Введите число больше 1768")}
+    }
+    tmpCar = []
     return carArray
 }
 
 func editItem(_ : [[String]])->[[String]]{
     print("Введите индекс редактируемого автомобиля: 0 - \(carArray.count - 1)")
-    let tmpIndex = Int(readLine()!)
-    print("Введите год выпуска: [\(carArray[tmpIndex!][0])]")
-    carArray[tmpIndex!][0] = readLine()!
-    print("Введите производителя: [\(carArray[tmpIndex!][1])]")
-    carArray[tmpIndex!][1] = readLine()!
-    print("Введите марку: [\(carArray[tmpIndex!][2])]")
-    carArray[tmpIndex!][2] = readLine()!
-    print("Введите тип кузова: [\(carArray[tmpIndex!][3])]")
-    carArray[tmpIndex!][3] = readLine()!
-    saveArrayToFile(arrayToSave: carArray)
+    if let tmpStr = readLine(){
+        if let tmpIndex = Int(tmpStr){
+            if (tmpIndex >= 0)&&(tmpIndex <= carArray.count - 1) {
+                tmpCar = carArray[tmpIndex]
+                print("Введите год выпуска автомобиля: [\(carArray[tmpIndex][0])]")
+                if let tmpStr = readLine(){
+                    if (Int(tmpStr) != nil)&&(Int(tmpStr)! > 1768){
+                        tmpCar[0] = tmpStr
+                        print("Введите производителя автомобиля: [\(carArray[tmpIndex][1])]")
+                        if let tmpStr = readLine(){
+                            if tmpStr != "" {tmpCar[1] = tmpStr}
+                            print("Введите модель автомобиля: [\(carArray[tmpIndex][2])]")
+                            if let tmpStr = readLine(){
+                                if tmpStr != "" {tmpCar[2] = tmpStr}
+                                print("Введите тип кузова автомобиля: [\(carArray[tmpIndex][3])]")
+                                if let tmpStr = readLine(){
+                                    if tmpStr != "" {
+                                        tmpCar[3] = tmpStr
+                                        carArray[tmpIndex] = tmpCar
+                                        tmpCar = [] ; saveArrayToFile(arrayToSave: carArray)
+                                    }
+                                }else{print("Введите тип кузова"); tmpCar = []}
+                            }else{print("Введите модель"); tmpCar = []}
+                        }else{print("Введите производителя"); tmpCar = []}
+                    }else{print("Введите число больше 1768"); tmpCar = []}
+                }
+            }
+        }
+    }
+    tmpCar = []
     return carArray
 }
 
 //функция главного меню
 func MainMenu() {
-  //  dump(carArray)
+    //  dump(carArray)
     print("Выберите операцию \n1 : Просмотр\n2 : Редактирование\n3 : Удаление\n4 : Добавить индекс\n5 : Выход")
     while !isQuit{
         let operation = readLine()
